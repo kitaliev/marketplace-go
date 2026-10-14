@@ -1,0 +1,75 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "sku": "RUDNC1002-STHBCH",
+      "name": "Rudis Journey Knit Youth",
+      "category": "Кроссовки",
+      "brand": "Rudis"
+    },
+    {
+      "id": 2,
+      "sku": "1081a049-500",
+      "name": "Asics Aggressor 4",
+      "category":  "Кроссовки",
+      "brand": "Asics"
+    },
+    {
+      "id": 3,
+      "sku": "1081A053-102",
+      "name": "Asics Matcontrol 3",
+      "category":  "Кроссовки",
+      "brand": "Asics"
+    },
+    {
+      "id": 4,
+      "sku": "DEC-10",
+      "name": "Decathlon",
+      "category":  "Кроссовки",
+      "brand": "Decathlon"
+    },
+    {
+      "id": 5,
+      "sku": "JP4-6123",
+      "name": "Adidas HVC 2 Youth",
+      "category":  "Кроссовки",
+      "brand": "Adidas"
+    },
+    {
+      "id": 6,
+      "sku": "USWQZ1003-NVY",
+      "name": "Rudis USA Wrestling",
+      "category":"Футболки",
+      "brand": "Rudis"
+    },
+    {
+      "id": 7,
+      "sku": "BAD100-0126",
+      "name": "Asics Baseball",
+      "category": "Футболки",
+      "brand": "Asics"
+    },
+    {
+      "id": 8,
+      "sku": "RUDPL1002-BLK",
+      "name": "Rudis Classic Performance Hex Polo",
+      "category": "Футболки",
+      "brand": "Rudis"
+    },
+    {
+      "id": 9,
+      "sku": "USWTS1008-WHT",
+      "name": "Rudis USA Wrestling",
+      "category": "Футболки",
+      "brand": "Rudis"
+    },
+    {
+      "id": 10,
+      "sku": "UWWPL1000-BLK",
+      "name": "Поло судейское UWW RUDIS",
+      "category": "Футболки",
+      "brand": "Rudis"
+    }
+  ]
+}
+
