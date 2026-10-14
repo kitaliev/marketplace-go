@@ -1,6 +1,7 @@
 package jsonfile
 
 import (
+	"errors"
 	"sync"
 	"testing"
 
@@ -58,14 +59,15 @@ func TestGetByID(t *testing.T) {
 		name    string
 		in      int64
 		want    model.Product
-		wantErr bool
+		wantErr error
 	}{
-		{"normal case", 1, product, false},
-		{"no product", -1, model.Product{}, true},
+		{"normal case", 1, product, nil},
+		{"wrong id", -1, model.Product{}, ErrIncorrectID},
+		{"no product", 999, model.Product{}, ErrProductNotFound},
 	}
-	f, loadErr := Load("testdata/seed_test.json")
-	if loadErr != nil {
-		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, loadErr)
+	f, err := Load("testdata/seed_test.json")
+	if err != nil {
+		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, err)
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -73,22 +75,22 @@ func TestGetByID(t *testing.T) {
 			if got != tc.want {
 				t.Errorf("GetByID(%d) = %v; want %v", tc.in, got, tc.want)
 			}
-			if (err != nil) != tc.wantErr {
-				t.Errorf("GetByID(%d) got error %v; wanted error? %v", tc.in, err, tc.wantErr)
+			if !errors.Is(err, tc.wantErr) {
+				t.Errorf("GetByID(%d) got error %v; expected error %v", tc.in, err, tc.wantErr)
 			}
 		})
 	}
 }
 
 func TestGetByIDNotChangingOriginal(t *testing.T) {
-	f, loadErr := Load("testdata/seed_test.json")
-	if loadErr != nil {
-		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, loadErr)
+	f, err := Load("testdata/seed_test.json")
+	if err != nil {
+		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, err)
 	}
-	got, getErr := f.GetByID(1)
+	got, err := f.GetByID(1)
 	original := got
-	if getErr != nil {
-		t.Fatalf(`GetByID(1) from seed_test failed with error %v`, getErr)
+	if err != nil {
+		t.Fatalf(`GetByID(1) from seed_test failed with error %v`, err)
 	}
 	got.ID = 111
 	got.SKU = "TEST-SKU"
@@ -96,9 +98,9 @@ func TestGetByIDNotChangingOriginal(t *testing.T) {
 	got.Category = "TEST CAT"
 	got.Brand = "TEST Brand"
 
-	got2, get2Err := f.GetByID(1)
-	if get2Err != nil {
-		t.Fatalf(`GetByID(1) (got2) from seed_test failed with error %v`, get2Err)
+	got2, err := f.GetByID(1)
+	if err != nil {
+		t.Fatalf(`GetByID(1) (got2) from seed_test failed with error %v`, err)
 	}
 	if got2 != original {
 		t.Errorf("Changing data that was received from GetByID(1) changed data in list which should not happen")
@@ -106,9 +108,9 @@ func TestGetByIDNotChangingOriginal(t *testing.T) {
 }
 
 func TestSave(t *testing.T) {
-	f, loadErr := Load("testdata/seed_test.json")
-	if loadErr != nil {
-		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, loadErr)
+	f, err := Load("testdata/seed_test.json")
+	if err != nil {
+		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, err)
 	}
 	newProduct := model.Product{
 		ID:       11,
@@ -126,9 +128,9 @@ func TestSave(t *testing.T) {
 	}
 
 	f.Save(newProduct)
-	got, getErr := f.GetByID(11)
-	if getErr != nil {
-		t.Errorf("GetByID(11) after save should return it, error received %v", getErr)
+	got, err := f.GetByID(11)
+	if err != nil {
+		t.Errorf("GetByID(11) after save should return it, error received %v", err)
 	}
 	if got != newProduct {
 		t.Errorf("GetByID(11) after save should returned something else, expected %v, got %v", newProduct, got)
@@ -136,9 +138,9 @@ func TestSave(t *testing.T) {
 
 	f.Save(existingProduct)
 
-	got2, get1Err := f.GetByID(1)
-	if get1Err != nil {
-		t.Errorf("GetByID(1) after save returned error %v; expected no error", get1Err)
+	got2, err := f.GetByID(1)
+	if err != nil {
+		t.Errorf("GetByID(1) after save returned error %v; expected no error", err)
 	}
 	if got2 != existingProduct {
 		t.Errorf("GetByID(1) after save returned old product; ether changes was not applied or method returns old data")
@@ -146,9 +148,9 @@ func TestSave(t *testing.T) {
 }
 
 func TestLeakNLoss(t *testing.T) {
-	f, loadErr := Load("testdata/seed_test.json")
-	if loadErr != nil {
-		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, loadErr)
+	f, err := Load("testdata/seed_test.json")
+	if err != nil {
+		t.Fatalf(`Load("testdata/seed_test.json") failed with error %v`, err)
 	}
 
 	var wg sync.WaitGroup

@@ -10,7 +10,10 @@ import (
 	"github.com/kitaliev/marketplace-go/internal/model"
 )
 
-var ErrProductNotFound = errors.New("product not found")
+var (
+	ErrProductNotFound = errors.New("product not found")
+	ErrIncorrectID     = errors.New("incorrect id value")
+)
 
 type File struct {
 	mu       sync.Mutex
@@ -69,6 +72,9 @@ func validateProducts(products []model.Product) error {
 func (f *File) GetByID(id int64) (model.Product, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+	if id <= 0 {
+		return model.Product{}, ErrIncorrectID
+	}
 	p, ok := f.products[id]
 	if !ok {
 		return model.Product{}, ErrProductNotFound

@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	fileName := flag.String("seed", "", "--seed=<path to file>")
+	fileName := flag.String("seed", "data/seed.json", "--seed=<path to file>")
 	flag.Parse()
 	if *fileName == "" {
 		fmt.Println("no seed file was given")
@@ -32,35 +32,51 @@ func main() {
 	mux.HandleFunc("GET /products/{id}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		idParam := r.PathValue("id")
-		id, convErr := strconv.ParseInt(idParam, 10, 64)
+		id, err := strconv.ParseInt(idParam, 10, 64)
 		encoder := json.NewEncoder(w)
-		if convErr != nil {
+		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			encodeErr := encoder.Encode(map[string]string{
+			err := encoder.Encode(map[string]string{
 				"error": "invalid product id",
 			})
-			if encodeErr != nil {
+			if err != nil {
 				log.Printf("error responding error to product/%s", idParam)
 			}
 			return
 		}
-		product, getErr := service.GetByID(id)
-		if getErr != nil {
-			if errors.Is(getErr, jsonfile.ErrProductNotFound) {
-				w.WriteHeader(http.StatusNotFound)
-			} else {
-				w.WriteHeader(http.StatusBadRequest)
-			}
-			getErr = encoder.Encode(map[string]string{
+		product, err := service.GetByID(id)
+		if err != nil && errors.Is(err, jsonfile.ErrProductNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			err := encoder.Encode(map[string]string{
 				"error": "product not found",
 			})
-			if getErr != nil {
+			if err != nil {
 				log.Printf("error responding error to product/%s", idParam)
 			}
 			return
 		}
-		encodeErr := encoder.Encode(product)
-		if encodeErr != nil {
+		if err != nil && errors.Is(err, jsonfile.ErrIncorrectID) {
+			w.WriteHeader(http.StatusBadRequest)
+			err := encoder.Encode(map[string]string{
+				"error": "invalid product id",
+			})
+			if err != nil {
+				log.Printf("error responding error to product/%s", idParam)
+			}
+			return
+		}
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			err := encoder.Encode(map[string]string{
+				"error": "internal server error",
+			})
+			if err != nil {
+				log.Printf("error responding error to product/%s", idParam)
+			}
+			return
+		}
+		err = encoder.Encode(product)
+		if err != nil {
 			log.Printf("error responding response to product/%s", idParam)
 		}
 	})
@@ -68,14 +84,13 @@ func main() {
 	server := &http.Server{
 		Addr:              ":8080",
 		Handler:           mux,
-		ReadHeaderTimeout: 10 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
-	serveErr := server.ListenAndServe()
-
-	if serveErr != nil {
-		log.Printf("error during listen and serve %v", serveErr)
+	err = server.ListenAndServe()
+	if err != nil {
+		log.Printf("error during listen and serve %v", err)
 	}
 }
