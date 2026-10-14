@@ -1,0 +1,21 @@
+version: "2"
+linters:
+  default: standard        # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - errorlint
+    - bodyclose
+    - noctx
+    - copyloopvar
+    - nilerr
+    - unconvert
+    - misspell
+    - gocritic
+    - revive
+    - sqlclosecheck
+  exclusions:
+    presets:
+      - comments
+formatters:
+  enable:
+    - gofumpt
+    - goimports
