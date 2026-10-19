@@ -13,7 +13,8 @@ func TestValidateCategories(t *testing.T) {
 		{"normal case", []Category{{1, "Test"}, {2, "OK"}}, false},
 		{"duplicate id", []Category{{1, "Test"}, {1, "OK"}}, true},
 		{"empty name", []Category{{1, ""}}, true},
-		{"wrong id", []Category{{-1, "Test"}}, true},
+		{"negative id", []Category{{-1, "Test"}}, true},
+		{"zero id", []Category{{0, "Test"}}, true},
 	}
 
 	for _, tc := range tests {

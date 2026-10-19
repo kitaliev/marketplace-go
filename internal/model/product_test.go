@@ -48,9 +48,16 @@ func TestValidateProducts(t *testing.T) {
 			true,
 		},
 		{
-			"wrong id",
+			"negative id",
 			[]Product{
 				{-1, "Test", "Test", "Test", "Test"},
+			},
+			true,
+		},
+		{
+			"zero id",
+			[]Product{
+				{0, "Test", "Test", "Test", "Test"},
 			},
 			true,
 		},
