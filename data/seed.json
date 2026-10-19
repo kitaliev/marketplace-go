@@ -70,6 +70,12 @@
       "category": "Футболки",
       "brand": "Rudis"
     }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Футболки"
+    }
   ]
 }
 
