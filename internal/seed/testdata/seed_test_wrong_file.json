@@ -2,9 +2,8 @@
   "products": [
     {
       "id": 1,
-      "sku": "RUDNC1002-STHBCH",
       "name": "Rudis Journey Knit Youth",
-      "brand": "Rudis"
+      "something": "something"
     }
   ]
 }
