@@ -2,25 +2,25 @@ package httpserver
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"testing"
 	"time"
 )
 
 func TestInitServerSamePortErrors(t *testing.T) {
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		_, _ = w.Write([]byte("ok"))
-	})
+	var lc net.ListenConfig
+	busy, err := lc.Listen(context.Background(), "tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("unable to occupy a port for test: %v", err)
+	}
+	defer func() { _ = busy.Close() }()
+
 	args := Arguments{
-		Addr:            ":8080",
+		Addr:            busy.Addr().String(),
 		ShutdownTimeout: 10 * time.Second,
 	}
-	err := InitServer(context.Background(), mux, &args)
-	if err != nil {
-		t.Fatalf("unable to start server for test %v:", err)
-	}
-	err = InitServer(context.Background(), mux, &args)
+	err = InitServer(context.Background(), http.NotFoundHandler(), &args)
 	if err == nil {
 		t.Errorf("expected error on initializing server on the same port, no error received")
 	}
