@@ -1,4 +1,4 @@
-package seed
+package storage
 
 import (
 	"testing"

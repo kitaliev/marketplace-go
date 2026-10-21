@@ -1,0 +1,50 @@
+{
+  "prices": [
+    {
+      "product_id": 1,
+      "currency": "RUB",
+      "amount": 2000000
+    },
+    {
+      "product_id": 2,
+      "currency": "RUB",
+      "amount": 3004400
+    },
+    {
+      "product_id": 3,
+      "currency": "RUB",
+      "amount": 204500
+    },
+    {
+      "product_id": 4,
+      "currency": "RUB",
+      "amount": 9990000
+    },
+    {
+      "product_id": 5,
+      "currency": "RUB",
+      "amount": 999990
+    },
+    {
+      "product_id": 6,
+      "currency": "RUB",
+      "amount": 3004400
+    },
+    {
+      "product_id": 7,
+      "currency": "RUB",
+      "amount": 3004400
+    },
+    {
+      "product_id": 8,
+      "currency": "RUB",
+      "amount": 3004400
+    },
+    {
+      "product_id": 9,
+      "currency": "RUB",
+      "amount": 3004400
+    }
+  ]
+}
+

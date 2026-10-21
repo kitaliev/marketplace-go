@@ -2,10 +2,11 @@ package memory
 
 import (
 	"context"
+	"errors"
 	"sync"
-
-	"github.com/kitaliev/marketplace-go/internal/model"
 )
+
+var ErrNotFound = errors.New("not found")
 
 type Validatable[T any] interface {
 	GetID() int64
@@ -34,7 +35,7 @@ func (f *Data[T]) GetByID(ctx context.Context, id int64) (T, error) {
 	defer f.mu.Unlock()
 	p, ok := f.items[id]
 	if !ok {
-		return t, model.ErrNotFound
+		return t, ErrNotFound
 	}
 	return p, nil
 }
