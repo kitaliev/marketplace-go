@@ -1,0 +1,13 @@
+{
+  "brands": [
+    {
+      "id": 1,
+      "brand": "Rudis"
+    },
+    {
+      "id": 2,
+      "brand": "Asics"
+    }
+  ]
+}
+

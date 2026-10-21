@@ -1,11 +1,11 @@
-package seed
+package storage
 
 import (
 	"encoding/json"
 	"log/slog"
 	"os"
 
-	"github.com/kitaliev/marketplace-go/internal/model"
+	"github.com/kitaliev/marketplace-go/internal/catalog/model"
 )
 
 type ProductDTO struct {

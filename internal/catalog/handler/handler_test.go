@@ -9,7 +9,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/kitaliev/marketplace-go/internal/model"
+	"github.com/kitaliev/marketplace-go/internal/platform/storage/memory"
+
+	"github.com/kitaliev/marketplace-go/internal/catalog/model"
 )
 
 type fakeRepo[T any] struct {
@@ -30,7 +32,7 @@ func (r *fakeRepo[T]) GetByID(ctx context.Context, id int64) (T, error) {
 	defer r.mu.Unlock()
 	p, ok := r.items[id]
 	if !ok {
-		return t, model.ErrNotFound
+		return t, memory.ErrNotFound
 	}
 	return p, nil
 }

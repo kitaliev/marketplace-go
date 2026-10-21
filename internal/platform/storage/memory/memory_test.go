@@ -7,11 +7,11 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/kitaliev/marketplace-go/internal/seed"
+	"github.com/kitaliev/marketplace-go/internal/catalog/storage"
 
 	"go.uber.org/goleak"
 
-	"github.com/kitaliev/marketplace-go/internal/model"
+	"github.com/kitaliev/marketplace-go/internal/catalog/model"
 )
 
 func TestMain(m *testing.M) {
@@ -19,7 +19,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestNew(t *testing.T) {
-	list := seed.ParsedList{
+	list := storage.ParsedList{
 		Products: []model.Product{
 			{ID: 1, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
 			{ID: 2, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
@@ -53,7 +53,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestGetByID(t *testing.T) {
-	list := seed.ParsedList{
+	list := storage.ParsedList{
 		Products: []model.Product{
 			{ID: 1, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
 			{ID: 2, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
@@ -70,8 +70,8 @@ func TestGetByID(t *testing.T) {
 		wantErr error
 	}{
 		{"normal case", 1, list.Products[0], nil},
-		{"wrong id", -1, model.Product{}, model.ErrNotFound},
-		{"no product", 999, model.Product{}, model.ErrNotFound},
+		{"wrong id", -1, model.Product{}, ErrNotFound},
+		{"no product", 999, model.Product{}, ErrNotFound},
 	}
 	store := New(list.Products)
 	for _, tc := range tests {
@@ -88,7 +88,7 @@ func TestGetByID(t *testing.T) {
 }
 
 func TestGetByIDNotChangingOriginal(t *testing.T) {
-	list := seed.ParsedList{
+	list := storage.ParsedList{
 		Products: []model.Product{
 			{ID: 1, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
 			{ID: 2, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
@@ -120,7 +120,7 @@ func TestGetByIDNotChangingOriginal(t *testing.T) {
 }
 
 func TestSave(t *testing.T) {
-	list := seed.ParsedList{
+	list := storage.ParsedList{
 		Products: []model.Product{
 			{ID: 1, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
 			{ID: 2, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
@@ -173,7 +173,7 @@ func TestSave(t *testing.T) {
 }
 
 func TestLeakNLoss(t *testing.T) {
-	list := seed.ParsedList{
+	list := storage.ParsedList{
 		Products: []model.Product{
 			{ID: 1, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
 			{ID: 2, Name: "Test", Category: "Test", SKU: "Test", Brand: "Test"},
